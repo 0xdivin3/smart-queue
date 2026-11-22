@@ -1,0 +1,23 @@
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#f4f6fa;color:#1b2430}
+.bar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 20px;background:#0f3d73;color:#fff;flex-wrap:wrap}
+.wrap{max-width:920px;margin:0 auto;padding:20px}
+.card{background:#fff;border:1px solid #e1e6ee;border-radius:12px;padding:16px;margin-bottom:14px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+button{display:inline-flex;align-items:center;gap:6px;background:#0f3d73;color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:14px}
+button.ghost{background:transparent;border:1px solid #fff}
+button.alt{background:#e8edf5;color:#0f3d73}
+button.warn{background:#b3261e}
+button:disabled{opacity:.5;cursor:not-allowed}
+input,select{padding:9px 10px;border:1px solid #c9d2e0;border-radius:8px;font-size:14px;width:100%;margin:4px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.ticket{font-size:34px;font-weight:700;color:#0f3d73}
+.badge{padding:3px 10px;border-radius:99px;font-size:12px;background:#e8edf5;text-transform:capitalize}
+.badge.waiting{background:#fff3cd}.badge.called{background:#d1ecf1}.badge.in_service{background:#d4edda}
+.err{color:#b00020}.ok{color:#146c2e}.muted{color:#667085;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px;border-bottom:1px solid #e1e6ee;vertical-align:top}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.scroll{overflow-x:auto}
+.auth{max-width:400px;margin:8vh auto;padding:0 16px}
+.ico{vertical-align:-3px;margin-right:6px}

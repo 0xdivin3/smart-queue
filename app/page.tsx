@@ -64,6 +64,7 @@ export default function Home() {
           </button>
         </div>
       </form>
+      <p className="muted"><a href="/staff/login">Staff login</a> | <a href="/admin/login">Admin login</a></p>
     </div>
   );
 }

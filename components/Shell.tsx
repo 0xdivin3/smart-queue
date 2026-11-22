@@ -12,7 +12,7 @@ export default function Shell({ profile, children }: { profile: Profile; childre
         <span>{profile.full_name} ({profile.role})</span>
         <button
           className="ghost"
-          onClick={async () => { await supabase.auth.signOut(); router.replace("/"); }}
+          onClick={async () => { await supabase.auth.signOut(); router.replace(profile.role === "student" ? "/" : `/${profile.role}/login`); }}
         >
           <LogOut size={16} /> Log out
         </button>

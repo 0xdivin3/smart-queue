@@ -7,13 +7,14 @@ import { supabase, Profile, Role } from "./supabase";
 export function useProfile(required?: Role) {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
+  const login = required && required !== "student" ? `/${required}/login` : "/";
 
   useEffect(() => {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return router.replace("/");
+      if (!session) return router.replace(login);
       const { data } = await supabase.from("profiles").select("*").eq("id", session.user.id).single();
-      if (!data) return router.replace("/");
+      if (!data) return router.replace(login);
       if (required && data.role !== required) return router.replace("/" + data.role);
       setProfile(data as Profile);
     })();

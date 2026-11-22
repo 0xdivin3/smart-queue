@@ -17,7 +17,7 @@ Register an account in the app, then run in the SQL editor:
 
     update profiles set role = 'admin' where email = 'your@email.com';
 
-Log in again. From the Admin page > Users, set other registered accounts to `staff` and assign each an office.
+Then open `/admin/login` and log in. (Staff use `/staff/login`; students use the home page.) From the Admin page > Users, set other registered accounts to `staff` and assign each an office.
 
 ## Test flow
 

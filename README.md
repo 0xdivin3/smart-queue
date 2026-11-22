@@ -17,7 +17,7 @@ Register an account in the app, then run in the SQL editor:
 
     update profiles set role = 'admin' where email = 'your@email.com';
 
-Then open `/admin/login` and log in. (Staff use `/staff/login`; students use the home page.) From the Admin page > Users, use "Create staff account" to issue staff logins (name, email, temporary password, office).
+Then open `/admin/login` and log in. (Staff use `/staff/login`; students use `/login`; the home page `/` is the public landing page.) From the Admin page > Users, use "Create staff account" to issue staff logins (name, email, temporary password, office).
 
 ## Test flow
 

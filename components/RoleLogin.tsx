@@ -38,7 +38,7 @@ export default function RoleLogin({ role }: { role: "admin" | "staff" }) {
         {msg && <p className="err">{msg}</p>}
         <div className="row">
           <button disabled={busy}><LogIn size={16} /> {busy ? "Please wait..." : "Log in"}</button>
-          <a href="/" className="muted">Student login</a>
+          <a href="/login" className="muted">Student login</a>
         </div>
       </form>
     </div>

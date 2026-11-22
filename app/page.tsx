@@ -1,70 +1,75 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
-import { LogIn, UserPlus } from "lucide-react";
+import {
+  Ticket, UserPlus, ListOrdered, BellRing, Megaphone, BarChart3, ShieldCheck, Clock, Users,
+} from "lucide-react";
 
-export default function Home() {
-  const router = useRouter();
-  const [mode, setMode] = useState<"login" | "register">("login");
-  const [f, setF] = useState({ email: "", password: "", full_name: "", matric_no: "" });
-  const [msg, setMsg] = useState("");
-  const [busy, setBusy] = useState(false);
+const steps = [
+  { icon: UserPlus, title: "Register", text: "Create a student account with your matric number." },
+  { icon: ListOrdered, title: "Join a queue", text: "Pick an office and service from your phone and get a ticket number." },
+  { icon: Clock, title: "Track your place", text: "See your live position and estimated waiting time." },
+  { icon: BellRing, title: "Get notified", text: "Receive an alert when your turn is near and when you are called." },
+];
 
-  async function goToDashboard(userId: string) {
-    const { data } = await supabase.from("profiles").select("role").eq("id", userId).single();
-    router.replace("/" + (data?.role ?? "student"));
-  }
+const features = [
+  { icon: Ticket, title: "Digital tickets", text: "Numbered tickets per service (for example PAY-012) that reset every day." },
+  { icon: Clock, title: "Wait estimates", text: "Estimated waiting time based on each service's average handling time." },
+  { icon: Megaphone, title: "Staff console", text: "Call the next student, start service, complete or skip no-shows." },
+  { icon: BarChart3, title: "Admin reports", text: "Daily totals, completed, skipped and cancelled tickets, with average wait and service times." },
+  { icon: Users, title: "Offices and services", text: "Admins add offices and services and issue staff accounts." },
+  { icon: ShieldCheck, title: "Role-based access", text: "Students, staff and admins each see only what they are allowed to." },
+];
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) goToDashboard(session.user.id);
-    });
-  }, []);
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setMsg("");
-    const res =
-      mode === "login"
-        ? await supabase.auth.signInWithPassword({ email: f.email, password: f.password })
-        : await supabase.auth.signUp({
-            email: f.email,
-            password: f.password,
-            options: { data: { full_name: f.full_name, matric_no: f.matric_no } },
-          });
-    setBusy(false);
-    if (res.error) return setMsg(res.error.message);
-    if (!res.data.session) return setMsg("Check your email to confirm your account, then log in.");
-    goToDashboard(res.data.session.user.id);
-  }
-
-  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
-
+export default function Landing() {
   return (
-    <div className="auth">
-      <h1>Smart Queue</h1>
-      <p className="muted">Join university office queues from your phone and get notified when it is your turn.</p>
-      <form className="card" onSubmit={submit}>
-        <h3>{mode === "login" ? "Log in" : "Create student account"}</h3>
-        {mode === "register" && (
-          <>
-            <input placeholder="Full name" value={f.full_name} onChange={set("full_name")} required />
-            <input placeholder="Matric number" value={f.matric_no} onChange={set("matric_no")} required />
-          </>
-        )}
-        <input type="email" placeholder="Email" value={f.email} onChange={set("email")} required />
-        <input type="password" placeholder="Password (min 6 characters)" value={f.password} onChange={set("password")} minLength={6} required />
-        {msg && <p className="err">{msg}</p>}
+    <div>
+      <header className="bar">
+        <b><Ticket size={18} className="ico" />Smart Queue</b>
         <div className="row">
-          <button disabled={busy}>{mode === "login" ? <LogIn size={16} /> : <UserPlus size={16} />}{busy ? "Please wait..." : mode === "login" ? "Log in" : "Register"}</button>
-          <button type="button" className="alt" onClick={() => { setMode(mode === "login" ? "register" : "login"); setMsg(""); }}>
-            {mode === "login" ? "New student? Register" : "Have an account? Log in"}
-          </button>
+          <a className="btn ghostlink" href="/staff/login">Staff</a>
+          <a className="btn ghostlink" href="/admin/login">Admin</a>
         </div>
-      </form>
-      <p className="muted"><a href="/staff/login">Staff login</a> | <a href="/admin/login">Admin login</a></p>
+      </header>
+
+      <section className="hero">
+        <div className="wrap">
+          <h1>Stop standing in line at university offices.</h1>
+          <p>
+            A smart queue management system that lets students join a queue online, follow their
+            position in real time and be called when it is their turn.
+          </p>
+          <div className="row" style={{ justifyContent: "flex-start" }}>
+            <a className="btn" href="/login">Student login or register</a>
+            <a className="btn alt" href="#how">How it works</a>
+          </div>
+        </div>
+      </section>
+
+      <main className="wrap">
+        <h2 id="how">How it works</h2>
+        <div className="grid">
+          {steps.map((s, i) => (
+            <div className="card" key={s.title}>
+              <s.icon size={24} color="#0f3d73" />
+              <h3>{i + 1}. {s.title}</h3>
+              <p className="muted">{s.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <h2>Features</h2>
+        <div className="grid">
+          {features.map((f) => (
+            <div className="card" key={f.title}>
+              <f.icon size={24} color="#0f3d73" />
+              <h3>{f.title}</h3>
+              <p className="muted">{f.text}</p>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      <footer className="wrap muted" style={{ textAlign: "center" }}>
+        Final year project: Design and implementation of a smart queue management system for university offices.
+      </footer>
     </div>
   );
 }

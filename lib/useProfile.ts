@@ -7,7 +7,7 @@ import { supabase, Profile, Role } from "./supabase";
 export function useProfile(required?: Role) {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
-  const login = required && required !== "student" ? `/${required}/login` : "/";
+  const login = required && required !== "student" ? `/${required}/login` : "/login";
 
   useEffect(() => {
     (async () => {

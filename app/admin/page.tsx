@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useProfile } from "@/lib/useProfile";
 import Shell from "@/components/Shell";
-import { BarChart3, Building2, Plus, Save, Users } from "lucide-react";
+import { BarChart3, Building2, Plus, Save, UserPlus, Users } from "lucide-react";
 
 function UserRow({ u, offices, onSave }: { u: any; offices: any[]; onSave: (id: string, role: string, office: string | null) => void }) {
   const [role, setRole] = useState(u.role);
@@ -39,6 +39,7 @@ export default function Admin() {
   const [msg, setMsg] = useState("");
   const [o, setO] = useState({ name: "", location: "" });
   const [s, setS] = useState({ office_id: "", name: "", prefix: "", avg_service_minutes: 10 });
+  const [st, setSt] = useState({ full_name: "", email: "", password: "", office_id: "" });
 
   const load = useCallback(async () => {
     const [a, b, c, d] = await Promise.all([
@@ -58,6 +59,21 @@ export default function Admin() {
   async function run(p: any) {
     const { error } = await p;
     setMsg(error ? error.message : "Saved");
+    load();
+  }
+
+  async function createStaff() {
+    setMsg("");
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch("/api/admin/create-staff", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + session?.access_token },
+      body: JSON.stringify(st),
+    });
+    const out = await res.json();
+    if (!res.ok) return setMsg(out.error ?? "Could not create staff account");
+    setMsg("Saved");
+    setSt({ full_name: "", email: "", password: "", office_id: "" });
     load();
   }
 
@@ -139,9 +155,24 @@ export default function Admin() {
       )}
 
       {tab === "users" && (
+        <>
+        <div className="card">
+          <h3>Create staff account</h3>
+          <input placeholder="Full name" value={st.full_name} onChange={(e) => setSt({ ...st, full_name: e.target.value })} />
+          <input type="email" placeholder="Email" value={st.email} onChange={(e) => setSt({ ...st, email: e.target.value })} />
+          <input type="text" placeholder="Temporary password (min 6 characters)" value={st.password} onChange={(e) => setSt({ ...st, password: e.target.value })} />
+          <select value={st.office_id} onChange={(e) => setSt({ ...st, office_id: e.target.value })}>
+            <option value="">Select office</option>
+            {offices.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
+          </select>
+          <button onClick={createStaff} disabled={!st.full_name || !st.email || !st.office_id || st.password.length < 6}>
+            <UserPlus size={16} /> Create staff account
+          </button>
+          <p className="muted">Staff then log in at /staff/login with this email and password.</p>
+        </div>
         <div className="card scroll">
-          <h3>Users</h3>
-          <p className="muted">To create a staff account: have them register, then set their role to staff and assign an office here.</p>
+          <h3>All users</h3>
+          <p className="muted">You can also change any user's role or office here.</p>
           <table>
             <thead><tr><th>User</th><th>Role</th><th>Office (staff)</th><th></th></tr></thead>
             <tbody>
@@ -156,6 +187,7 @@ export default function Admin() {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </Shell>
   );

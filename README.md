@@ -7,9 +7,9 @@ Next.js (TypeScript) + Supabase (PostgreSQL, Auth). Three roles: student, staff,
 1. Create a project at supabase.com.
 2. Authentication > Providers > Email: turn OFF "Confirm email" (easier for demos and testing).
 3. SQL Editor: run `supabase/01_schema.sql`, then `supabase/02_logic.sql`.
-4. Project Settings > API: copy the Project URL and the anon public key.
-5. Locally: copy `.env.example` to `.env.local`, fill in both values, then `npm install` and `npm run dev`.
-6. Push to GitHub, import the repo in Vercel, and add the same two variables under Settings > Environment Variables BEFORE the first deploy.
+4. Project Settings > API: copy the Project URL, the anon public key and the service_role secret key.
+5. Locally: copy `.env.example` to `.env.local`, fill in all three values, then `npm install` and `npm run dev`.
+6. Push to GitHub, import the repo in Vercel, and add the same three variables (the service_role key must NOT start with NEXT_PUBLIC) under Settings > Environment Variables BEFORE the first deploy.
 
 ## First admin
 
@@ -17,7 +17,7 @@ Register an account in the app, then run in the SQL editor:
 
     update profiles set role = 'admin' where email = 'your@email.com';
 
-Then open `/admin/login` and log in. (Staff use `/staff/login`; students use the home page.) From the Admin page > Users, set other registered accounts to `staff` and assign each an office.
+Then open `/admin/login` and log in. (Staff use `/staff/login`; students use the home page.) From the Admin page > Users, use "Create staff account" to issue staff logins (name, email, temporary password, office).
 
 ## Test flow
 
